@@ -52,10 +52,12 @@ jobs:
             ninja -C build
             ninja -C build install
             rm -Rf build
-            meson --prefix /tmp/qopenhd/usr build
+            meson --prefix /tmp/gst-plugins-good/usr build
             ninja -C build
             ninja -C build install
+            fpm -a armhf -s dir -t deb -n gst-plugins-good -v 2.1 -C /tmp/gst-plugins-good -p gst-plugins-good-2.1.deb
             ls -a
+
 
     - name: Upload to Github
       uses: 'actions/upload-artifact@v2'
