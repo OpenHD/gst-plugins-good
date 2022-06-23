@@ -48,10 +48,6 @@ jobs:
             sudo ldconfig
             export PATH="$PATH:/opt/Qt5.15.4/bin/"
             git clone https://github.com/GStreamer/gst-plugins-good
-            meson --prefix /usr build
-            ninja -C build
-            ninja -C build install
-            rm -Rf build
             meson --prefix /tmp/gst-plugins-good/usr build
             ninja -C build
             ninja -C build install
