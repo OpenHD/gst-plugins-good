@@ -33,24 +33,36 @@ jobs:
         base_image: http://openhdfpv.org/wp-content/BaseImages/OpenHD-image-pi-bullseye-milestone--2.1-milestones-2022-05-28_1033.zip
         image_additional_mb: 4000
         copy_repository_path: /opt
-        copy_artifact_path: QOpenHD
+        copy_artifact_path: gst-plugins-good
         import_github_env: true
         cpu: cortex-a53
         commands: |
             ls -a
             cd /opt
             apt update
-            sudo bash QOpenHD/install_dep.sh
-            cd /opt/QOpenHD
-            sudo ./package.sh armhf raspbian bullseye
+            sudo bash gst-plugins-good/install_dep.sh
+            cd /opt/gst-plugins-good
+            
+            touch /etc/ld.so.conf.d/qt.conf
+            echo "/opt/Qt5.15.4/lib/" >/etc/ld.so.conf.d/qt.conf
+            sudo ldconfig
+            export PATH="$PATH:/opt/Qt5.15.4/bin/"
+            git clone https://github.com/GStreamer/gst-plugins-good
+            meson --prefix /usr build
+            ninja -C build
+            ninja -C build install
+            rm -Rf build
+            meson --prefix /tmp/qopenhd/usr build
+            ninja -C build
+            ninja -C build install
             ls -a
 
     - name: Upload to Github
       uses: 'actions/upload-artifact@v2'
       with:
-        name: "QOpenHd"
+        name: "gst-plugins-good"
         path: |
-          QOpenHD/*.deb
+          gst-plugins-good/*.deb
           
     - name: Push
       id: push
@@ -64,7 +76,7 @@ jobs:
         distro: "raspbian"
         release: "bullseye"
         republish: "true" # needed ONLY if version is not changing
-        file: "QOpenHD/*.deb"
+        file: "gst-plugins-good/*.deb"
           
       #- name: Install
       #  run: |
