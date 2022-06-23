@@ -40,6 +40,8 @@ jobs:
             ls -a
             cd /opt
             apt update
+            curl -1sLf 'https://dl.cloudsmith.io/public/openhd/openhd-2-1-alpha/setup.deb.sh' | sudo -E bash
+            sudo apt install -y openhd-qt-pi-bullseye 
             sudo bash gst-plugins-good/install_dep.sh
             cd /opt/gst-plugins-good
             
