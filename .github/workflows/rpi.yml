@@ -57,7 +57,7 @@ jobs:
             sudo cp libgstqmlgl.so ../
             sudo rm -Rf *
             sudo mv ../libgstqmlgl.so . 
-            cd /opt
+            cd /opt/gst-plugins-good
             fpm -a armhf -s dir -t deb -n gst-plugins-good -v 2.2.0-dev -C /tmp/gst-plugins-good -p gst-plugins-good-2.2.0.deb
             ls -a
 
@@ -67,7 +67,7 @@ jobs:
       with:
         name: "gst-plugins-good"
         path: |
-          *.deb
+          gst-plugins-good/*.deb
           
     - name: Push
       id: push
@@ -81,7 +81,7 @@ jobs:
         distro: "raspbian"
         release: "bullseye"
         republish: "true" # needed ONLY if version is not changing
-        file: "*.deb"
+        file: "gst-plugins-good/*.deb"
           
       #- name: Install
       #  run: |
