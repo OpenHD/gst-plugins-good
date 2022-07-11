@@ -53,7 +53,11 @@ jobs:
             meson --prefix /tmp/gst-plugins-good/usr build
             ninja -C build
             ninja -C build install
-            fpm -a armhf -s dir -t deb -n gst-plugins-good -v 2.1 -C /tmp/gst-plugins-good -p gst-plugins-good-2.1.deb
+            cd /tmp/gst-plugins-good/usr/lib/arm-linux-gnueabihf/gstreamer-1.0/
+            sudo cp libgstqmlgl.so ../
+            sudo rm -Rf *
+            sudo mv ../libgstqmlgl.so . 
+            fpm -a armhf -s dir -t deb -n gst-plugins-good -v 2.2.0-dev -C /tmp/gst-plugins-good -p gst-plugins-good-2.1.deb
             ls -a
 
 
