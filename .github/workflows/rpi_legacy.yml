@@ -32,7 +32,7 @@ jobs:
             cd /opt
             sudo apt update -y
             sudo apt upgrade -y
-            sudo apt install -y rubygems
+            sudo apt install -y ruby-dev
             echo "test --------------------------------------------------------------------------------------------"
             echo "deb http://deb.debian.org/debian buster-backports main" >> /etc/apt/sources.list.d/backports.list
             apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 0E98404D386FA1D9
