@@ -15,7 +15,7 @@ jobs:
        
     - uses: actions/checkout@v2
       with:
-        ref: 1.14
+        submodules: recursive
         
     - name: Emulating Raspberry Pi 4
       id: qemu
@@ -47,16 +47,19 @@ jobs:
             echo "/opt/Qt5.15.0/lib/" >/etc/ld.so.conf.d/qt.conf
             sudo ldconfig
             export PATH="$PATH:/opt/Qt5.15.0/bin/"
+            git clone https://github.com/GStreamer/gst-plugins-good
+            cd gst-plugins-good
+            git checkout 1.14
             meson --prefix /tmp/gst-plugins-good/usr build
             ninja -C build
             ninja -C build install
-            cd /tmp/gst-plugins-good/usr/lib/arm-linux-gnueabihf/gstreamer-1.0/
-            sudo cp libgstqmlgl.so ../
-            sudo cp libgstrpicamsrc.so ../ 
-            sudo rm -Rf *
-            sudo mv ../libgstqmlgl.so .
-            sudo mv ../libgstrpicamsrc.so .
-            cd /opt/gst-plugins-good
+            # cd /tmp/gst-plugins-good/usr/lib/arm-linux-gnueabihf/gstreamer-1.0/
+            # sudo cp libgstqmlgl.so ../
+            # sudo cp libgstrpicamsrc.so ../ 
+            # sudo rm -Rf *
+            # sudo mv ../libgstqmlgl.so .
+            # sudo mv ../libgstrpicamsrc.so .
+            # cd /opt/gst-plugins-good
             fpm -a armhf -s dir -t deb -n gst-plugins-good -v 2.2.0-evo -C /tmp/gst-plugins-good -p gst-plugins-good-2.2.0-evo.deb
             ls -a
 
