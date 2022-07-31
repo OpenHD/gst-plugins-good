@@ -12,7 +12,11 @@ jobs:
     env:
       CLOUDSMITH_API_KEY: ${{ secrets.CLOUDSMITH_API_KEY }}
     steps:
-    
+       
+    - uses: actions/checkout@v2
+      with:
+        submodules: recursive
+        
     - name: Emulating Raspberry Pi 4
       id: qemu
       uses: pguyot/arm-runner-action@1be4bc9de8a7ba3c1c4f5bf917c438e8dc97904b
@@ -43,7 +47,9 @@ jobs:
             echo "/opt/Qt5.15.0/lib/" >/etc/ld.so.conf.d/qt.conf
             sudo ldconfig
             export PATH="$PATH:/opt/Qt5.15.0/bin/"
-            git clone -b 1.14 https://github.com/GStreamer/gst-plugins-good
+            git clone https://github.com/GStreamer/gst-plugins-good
+            cd gst-plugins-good
+            git checkout 1.14
             meson --prefix /tmp/gst-plugins-good/usr build
             ninja -C build
             ninja -C build install
