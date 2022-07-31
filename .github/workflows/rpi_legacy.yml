@@ -30,12 +30,12 @@ jobs:
       id: qemu
       uses: pguyot/arm-runner-action@1be4bc9de8a7ba3c1c4f5bf917c438e8dc97904b
       with:
-        base_image: http://openhdfpv.org/wp-content/BaseImages/OpenHD-image-pi-bullseye-milestone--2.1-milestones-2022-05-28_1033.zip
+        base_image: https://downloads.raspberrypi.org/raspios_oldstable_armhf/images/raspios_oldstable_armhf-2022-04-07/2022-04-04-raspios-buster-armhf.img.xz
         image_additional_mb: 4000
         copy_repository_path: /opt
         copy_artifact_path: gst-plugins-good
         import_github_env: true
-        cpu: cortex-a53
+        cpu: cortex-a7
         commands: |
             ls -a
             cd /opt
