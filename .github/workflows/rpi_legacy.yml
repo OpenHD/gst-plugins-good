@@ -39,12 +39,16 @@ jobs:
         commands: |
             ls -a
             cd /opt
+            echo "deb http://deb.debian.org/debian buster-backports main" >> /etc/apt/sources.list.d/backports.list
+            apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 0E98404D386FA1D9
+            apt update 
+            apt install libboost1.74-dev/buster-backports libboost1.74-all-dev/buster-backports cmake/buster-backports -y
             apt update
             curl -1sLf 'https://dl.cloudsmith.io/public/openhd/openhd-2-2-evo/setup.deb.sh' | sudo -E bash
             sudo apt install -y openhd-qt  
             sudo bash gst-plugins-good/install_dep.sh
-            cd /opt/gst-plugins-good
-            
+            sudo apt install -y ruby-dev/buster-backports rubygems/buster-backports
+            cd /opt/gst-plugins-good        
             touch /etc/ld.so.conf.d/qt.conf
             echo "/opt/Qt5.15.0/lib/" >/etc/ld.so.conf.d/qt.conf
             sudo ldconfig
