@@ -40,7 +40,7 @@ jobs:
             apt install libboost1.74-dev/buster-backports libboost1.74-all-dev/buster-backports cmake/buster-backports -y
             apt update
             curl -1sLf 'https://dl.cloudsmith.io/public/openhd/openhd-2-2-evo/setup.deb.sh' | sudo -E bash
-            sudo apt install -y openhd-qt  
+            sudo apt install -y openhd-qt meson ninja-build
             sudo bash gst-plugins-good/install_dep.sh
             cd /opt/gst-plugins-good        
             touch /etc/ld.so.conf.d/qt.conf
