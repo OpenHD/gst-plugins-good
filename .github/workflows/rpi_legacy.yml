@@ -39,6 +39,7 @@ jobs:
         commands: |
             ls -a
             cd /opt
+            sudo apt install -y ruby-dev rubygems
             echo "deb http://deb.debian.org/debian buster-backports main" >> /etc/apt/sources.list.d/backports.list
             apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 0E98404D386FA1D9
             apt update 
@@ -47,7 +48,6 @@ jobs:
             curl -1sLf 'https://dl.cloudsmith.io/public/openhd/openhd-2-2-evo/setup.deb.sh' | sudo -E bash
             sudo apt install -y openhd-qt  
             sudo bash gst-plugins-good/install_dep.sh
-            sudo apt install -y ruby-dev rubygems
             cd /opt/gst-plugins-good        
             touch /etc/ld.so.conf.d/qt.conf
             echo "/opt/Qt5.15.0/lib/" >/etc/ld.so.conf.d/qt.conf
