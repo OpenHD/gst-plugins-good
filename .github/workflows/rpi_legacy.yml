@@ -32,7 +32,6 @@ jobs:
             cd /opt
             sudo apt update -y
             sudo apt upgrade -y
-            sudo gem update --system
             sudo apt install -y rubygems
             echo "test --------------------------------------------------------------------------------------------"
             echo "deb http://deb.debian.org/debian buster-backports main" >> /etc/apt/sources.list.d/backports.list
