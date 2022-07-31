@@ -69,7 +69,7 @@ jobs:
       with:
         name: "gst-plugins-good"
         path: |
-          gst-plugins-good/*.deb
+          gst-plugins-good/gst-plugins-good/*.deb
           
     - name: Push
       id: push
@@ -83,7 +83,7 @@ jobs:
         distro: "raspbian"
         release: "buster"
         republish: "true" # needed ONLY if version is not changing
-        file: "gst-plugins-good/*.deb"
+        file: "gst-plugins-good/gst-plugins-good/*.deb"
           
       #- name: Install
       #  run: |
