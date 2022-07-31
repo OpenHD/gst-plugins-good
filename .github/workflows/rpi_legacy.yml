@@ -16,6 +16,7 @@ jobs:
     - uses: actions/checkout@v2
       with:
         submodules: recursive
+        ref: 1.14
         
     - name: Emulating Raspberry Pi 4
       id: qemu
@@ -47,9 +48,6 @@ jobs:
             echo "/opt/Qt5.15.0/lib/" >/etc/ld.so.conf.d/qt.conf
             sudo ldconfig
             export PATH="$PATH:/opt/Qt5.15.0/bin/"
-            git clone https://github.com/GStreamer/gst-plugins-good
-            cd gst-plugins-good
-            git checkout 1.14
             meson --prefix /tmp/gst-plugins-good/usr build
             ninja -C build
             ninja -C build install
