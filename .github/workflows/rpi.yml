@@ -39,7 +39,7 @@ jobs:
             cd /opt
             apt update
             curl -1sLf 'https://dl.cloudsmith.io/public/openhd/openhd-2-3-evo/setup.deb.sh' | sudo -E bash
-            sudo apt install -y  openhd-qt 
+            sudo apt install -y ruby openhd-qt 
             sudo bash gst-plugins-good/install_dep.sh
             cd /opt/gst-plugins-good
             apt install -y ruby ruby-dev rubygems
@@ -77,7 +77,7 @@ jobs:
         command: "push"
         format: "deb"
         owner: "openhd"
-        repo: "openhd-2-3-evo"
+        repo: "openhd-2-3-evo-dev"
         distro: "raspbian"
         release: "bullseye"
         republish: "true" # needed ONLY if version is not changing
