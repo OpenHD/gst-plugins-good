@@ -1,4 +1,4 @@
-name: Build raspberry legacy
+name: Build raspberry
 
 on: [push]
 
@@ -39,14 +39,9 @@ jobs:
             apt update 
             apt install libboost1.74-dev/buster-backports libboost1.74-all-dev/buster-backports cmake/buster-backports -y
             apt update
-            curl -1sLf 'https://dl.cloudsmith.io/public/openhd/openhd-2-2-evo/setup.deb.sh' | sudo -E bash
+            curl -1sLf 'https://dl.cloudsmith.io/public/openhd/openhd-2-3-evo/setup.deb.sh' | sudo -E bash
             sudo apt install -y openhd-qt meson ninja-build
             sudo bash gst-plugins-good/install_dep.sh
-            cd /opt/gst-plugins-good        
-            touch /etc/ld.so.conf.d/qt.conf
-            echo "/opt/Qt5.15.0/lib/" >/etc/ld.so.conf.d/qt.conf
-            sudo ldconfig
-            export PATH="$PATH:/opt/Qt5.15.0/bin/"
             git clone https://github.com/GStreamer/gst-plugins-good
             cd gst-plugins-good
             git checkout 1.14
@@ -79,7 +74,7 @@ jobs:
         command: "push"
         format: "deb"
         owner: "openhd"
-        repo: "openhd-2-2-evo"
+        repo: "openhd-2-3-evo"
         distro: "raspbian"
         release: "buster"
         republish: "true" # needed ONLY if version is not changing
