@@ -19,7 +19,7 @@ jobs:
         
     - name: Emulating Raspberry Pi 4
       id: qemu
-      uses: pguyot/arm-runner-action@1be4bc9de8a7ba3c1c4f5bf917c438e8dc97904b
+    - uses: pguyot/arm-runner-action@v2.5.2
       with:
         base_image: https://downloads.raspberrypi.org/raspios_oldstable_armhf/images/raspios_oldstable_armhf-2022-04-07/2022-04-04-raspios-buster-armhf.img.xz
         image_additional_mb: 4000
