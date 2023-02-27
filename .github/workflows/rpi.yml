@@ -32,7 +32,7 @@ jobs:
         base_image: raspios_lite:latest
         image_additional_mb: 4000
         copy_repository_path: /opt
-        copy_artifact_path: OpenHD
+        copy_artifact_path: gst-plugins-good
         import_github_env: true
         commands: |
             ls -a
