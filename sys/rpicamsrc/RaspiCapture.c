@@ -268,6 +268,7 @@ void raspicapture_default_config(RASPIVID_CONFIG *config)
    config->quantisationParameter = 0;
    config->qp_min=0;
    config->qp_max=0;
+   config->rate_control=0;
    config->demoMode = 0;
    config->demoInterval = 250; // ms
    config->immutableInput = 1;
@@ -1421,9 +1422,24 @@ static MMAL_STATUS_T create_encoder_component(RASPIVID_STATE *state)
    }
 
    // Set the rate control parameter
-   if (0)
+   //if (0)
+   // Consti10 - experimental, rate control
+   if(config->encoding == MMAL_ENCODING_H264 && config->rate_control)
    {
-      MMAL_PARAMETER_VIDEO_RATECONTROL_T param = {{ MMAL_PARAMETER_RATECONTROL, sizeof(param)}, MMAL_VIDEO_RATECONTROL_DEFAULT};
+	 MMAL_VIDEO_RATECONTROL_T my_rate_control=MMAL_VIDEO_RATECONTROL_DEFAULT;
+	 if(config->rate_control==1){
+	   my_rate_control = MMAL_VIDEO_RATECONTROL_VARIABLE;
+	 }else if(config->rate_control==2){
+	   my_rate_control = MMAL_VIDEO_RATECONTROL_CONSTANT;
+	 }else if(config->rate_control==3){
+	   my_rate_control = MMAL_VIDEO_RATECONTROL_VARIABLE_SKIP_FRAMES;
+	 }else if(config->rate_control==2){
+	   my_rate_control = MMAL_VIDEO_RATECONTROL_CONSTANT_SKIP_FRAMES;
+	 }else{
+	   vcos_log_error("Invalid rate control %d",config->rate_control);
+	 }
+
+      MMAL_PARAMETER_VIDEO_RATECONTROL_T param = {{ MMAL_PARAMETER_RATECONTROL, sizeof(param)}, my_rate_control};
       status = mmal_port_parameter_set(encoder_output, &param.hdr);
       if (status != MMAL_SUCCESS)
       {

@@ -156,8 +156,11 @@ enum
   PROP_ROI_W,
   PROP_ROI_H,
   PROP_QUANTISATION_PARAMETER,
+  // Consti10
   PROP_QP_MIN,
   PROP_QP_MAX,
+  PROP_RATE_CONTROL
+  // Consti10
   PROP_INLINE_HEADERS,
   PROP_SHUTTER_SPEED,
   PROP_SENSOR_MODE,
@@ -483,6 +486,13 @@ gst_rpi_cam_src_class_init (GstRpiCamSrcClass * klass)
 	   g_param_spec_int ("qp-max",
 						 "QP max",
 						 "No descr",
+						 0, G_MAXINT, 0,
+						 G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
+  g_object_class_install_property (gobject_class,
+	   PROP_RATE_CONTROL,
+	   g_param_spec_int ("rate-control",
+						 "Rate control (exp)",
+						 "Set extra rate control",
 						 0, G_MAXINT, 0,
 						 G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
   // COnsti10
@@ -1034,6 +1044,10 @@ gst_rpi_cam_src_set_property (GObject * object, guint prop_id,
 	  src->capture_config.qp_max = g_value_get_int (value);
 	  src->capture_config.change_flags |= PROP_CHANGE_ENCODING;
 	  break;
+	case PROP_RATE_CONTROL:
+	  src->capture_config.rate_control = g_value_get_int (value);
+	  src->capture_config.change_flags |= PROP_CHANGE_ENCODING;
+	  break;
 	// Consti10
     case PROP_INLINE_HEADERS:
       src->capture_config.bInlineHeaders = g_value_get_boolean (value);
@@ -1226,6 +1240,9 @@ gst_rpi_cam_src_get_property (GObject * object, guint prop_id,
 	  break;
 	case PROP_QP_MAX:
 	  g_value_set_int (value, src->capture_config.qp_max);
+	  break;
+	case PROP_RATE_CONTROL:
+	  g_value_set_int (value, src->capture_config.rate_control);
 	  break;
 	// Consti10
     case PROP_INLINE_HEADERS:
