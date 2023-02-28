@@ -1462,7 +1462,7 @@ static MMAL_STATUS_T create_encoder_component(RASPIVID_STATE *state)
    // Consti10
   if (config->encoding == MMAL_ENCODING_H264 && config->qp_min)
   {
-	MMAL_PARAMETER_UINT32_T param2 = {{ MMAL_PARAMETER_VIDEO_ENCODE_MIN_QUANT, sizeof(param)}, config->qp_min};
+	MMAL_PARAMETER_UINT32_T param2 = {{ MMAL_PARAMETER_VIDEO_ENCODE_MIN_QUANT, sizeof(param2)}, config->qp_min};
 	status = mmal_port_parameter_set(encoder_output, &param2.hdr);
 	if (status != MMAL_SUCCESS)
 	{
@@ -1472,7 +1472,7 @@ static MMAL_STATUS_T create_encoder_component(RASPIVID_STATE *state)
   }
   if (config->encoding == MMAL_ENCODING_H264 && config->qp_max)
   {
-	MMAL_PARAMETER_UINT32_T param3 = {{ MMAL_PARAMETER_VIDEO_ENCODE_MAX_QUANT, sizeof(param)}, config->qp_max};
+	MMAL_PARAMETER_UINT32_T param3 = {{ MMAL_PARAMETER_VIDEO_ENCODE_MAX_QUANT, sizeof(param3)}, config->qp_max};
 	status = mmal_port_parameter_set(encoder_output, &param3.hdr);
 	if (status != MMAL_SUCCESS)
 	{
