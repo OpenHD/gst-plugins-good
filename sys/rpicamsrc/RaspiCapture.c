@@ -1423,7 +1423,8 @@ static MMAL_STATUS_T create_encoder_component(RASPIVID_STATE *state)
 
    // Set the rate control parameter
    //if (0)
-   // Consti10 - experimental, rate control
+   // Consti10 - experimental, rate control - doesn't work, but I am leaving it in here in case someone wants to tinker more with it.
+   // By default, we don't change the rate control
    if(config->encoding == MMAL_ENCODING_H264 && config->rate_control)
    {
 	 MMAL_VIDEO_RATECONTROL_T my_rate_control=MMAL_VIDEO_RATECONTROL_DEFAULT;
