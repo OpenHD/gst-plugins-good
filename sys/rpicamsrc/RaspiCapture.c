@@ -1438,7 +1438,7 @@ static MMAL_STATUS_T create_encoder_component(RASPIVID_STATE *state)
 	 }else{
 	   vcos_log_error("Invalid rate control %d",config->rate_control);
 	 }
-	 vcos_log_error("Setting rate control %d",config->rate_control);
+	 GST_WARNING("Setting rate control %d",config->rate_control);
 
       MMAL_PARAMETER_VIDEO_RATECONTROL_T param = {{ MMAL_PARAMETER_RATECONTROL, sizeof(param)}, my_rate_control};
       status = mmal_port_parameter_set(encoder_output, &param.hdr);
@@ -1497,7 +1497,7 @@ static MMAL_STATUS_T create_encoder_component(RASPIVID_STATE *state)
 	  vcos_log_error("XUnable to set min QP");
 	  goto error;
 	}
-	vcos_log_error("Set qp_min:%d",config->qp_min);
+	GST_WARNING("Set qp_min:%d",config->qp_min);
   }
   if (config->encoding == MMAL_ENCODING_H264 && config->qp_max)
   {
@@ -1508,7 +1508,7 @@ static MMAL_STATUS_T create_encoder_component(RASPIVID_STATE *state)
 	  vcos_log_error("XUnable to set max QP");
 	  goto error;
 	}
-	vcos_log_error("Set qp_max:%d",config->qp_max);
+	GST_WARNING("Set qp_max:%d",config->qp_max);
   }
    // Consti10
 
