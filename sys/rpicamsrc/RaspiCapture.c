@@ -268,6 +268,7 @@ void raspicapture_default_config(RASPIVID_CONFIG *config)
    config->quantisationParameter = 0;
    config->qp_min=0;
    config->qp_max=0;
+   config->rate_control=0;
    config->demoMode = 0;
    config->demoInterval = 250; // ms
    config->immutableInput = 1;
@@ -940,6 +941,9 @@ raspi_capture_fill_buffer(RASPIVID_STATE *state, GstBuffer **bufp,
   /* No timestamps if no clockm or invalid PTS */
   GstClockTime gst_pts = GST_CLOCK_TIME_NONE;
 
+  // Consti10: HDMI to CSI adapter - might fail after 500ms, which then breaks the pipeline - try X times
+  // to get a buffer, only then fail
+  int n_tries_left=2;
   do {
     buffer = mmal_queue_timedwait(state->encoded_buffer_q, 500);
     // Work around a bug where mmal_queue_timedwait() might return
@@ -949,6 +953,14 @@ raspi_capture_fill_buffer(RASPIVID_STATE *state, GstBuffer **bufp,
       GST_WARNING ("Retrying mmal_queue_timedwait() due to spurious failure.");
       continue;
     }
+	if(buffer == NULL){
+	  GST_WARNING ("Got no buffer after 500ms, tries left: %d",n_tries_left);
+	  n_tries_left--;
+	  if(n_tries_left<=0){
+		break;
+	  }
+	  continue;
+	}
   } while (0);
 
   if (G_UNLIKELY(buffer == NULL)) {
@@ -1410,9 +1422,27 @@ static MMAL_STATUS_T create_encoder_component(RASPIVID_STATE *state)
    }
 
    // Set the rate control parameter
-   if (0)
+   //if (0)
+   // Consti10 - experimental, rate control - doesn't work, but I am leaving it in here in case someone wants to tinker more with it.
+   // By default, we don't change the rate control
+   if(config->encoding == MMAL_ENCODING_H264 && config->rate_control)
    {
-      MMAL_PARAMETER_VIDEO_RATECONTROL_T param = {{ MMAL_PARAMETER_RATECONTROL, sizeof(param)}, MMAL_VIDEO_RATECONTROL_DEFAULT};
+	 MMAL_VIDEO_RATECONTROL_T my_rate_control=MMAL_VIDEO_RATECONTROL_DEFAULT;
+	 if(config->rate_control==1){
+	   my_rate_control = MMAL_VIDEO_RATECONTROL_VARIABLE;
+	 }else if(config->rate_control==2){
+	   my_rate_control = MMAL_VIDEO_RATECONTROL_CONSTANT;
+	 }else if(config->rate_control==3){
+	   my_rate_control = MMAL_VIDEO_RATECONTROL_VARIABLE_SKIP_FRAMES;
+	 }else if(config->rate_control==4){
+	   my_rate_control = MMAL_VIDEO_RATECONTROL_CONSTANT_SKIP_FRAMES;
+	 }else{
+	   vcos_log_error("Invalid rate control %d",config->rate_control);
+	 }
+	 // WARNING for debug
+	 GST_WARNING("Setting rate control %d",config->rate_control);
+
+      MMAL_PARAMETER_VIDEO_RATECONTROL_T param = {{ MMAL_PARAMETER_RATECONTROL, sizeof(param)}, my_rate_control};
       status = mmal_port_parameter_set(encoder_output, &param.hdr);
       if (status != MMAL_SUCCESS)
       {
@@ -1469,6 +1499,8 @@ static MMAL_STATUS_T create_encoder_component(RASPIVID_STATE *state)
 	  vcos_log_error("XUnable to set min QP");
 	  goto error;
 	}
+	// WARNING for debug
+	GST_WARNING("Set qp_min:%d",config->qp_min);
   }
   if (config->encoding == MMAL_ENCODING_H264 && config->qp_max)
   {
@@ -1479,6 +1511,8 @@ static MMAL_STATUS_T create_encoder_component(RASPIVID_STATE *state)
 	  vcos_log_error("XUnable to set max QP");
 	  goto error;
 	}
+	// WARNING for debug
+	GST_WARNING("Set qp_max:%d",config->qp_max);
   }
    // Consti10
 
@@ -1961,8 +1995,12 @@ raspi_capture_update_config (RASPIVID_STATE *state, RASPIVID_CONFIG *config, gbo
     MMAL_PORT_T *encoder_output = encoder->output[0];
 
     status = mmal_port_parameter_set_uint32(encoder_output, MMAL_PARAMETER_VIDEO_BIT_RATE, config->bitrate);
-    if (status != MMAL_SUCCESS)
-      vcos_log_warn("Unable to change bitrate dynamically");
+    if (status != MMAL_SUCCESS) {
+	  vcos_log_warn("Unable to change bitrate dynamically");
+	}else{
+	  // WARNING for debug
+	  GST_WARNING("Changed bitrate dynamically to %d",config->bitrate);
+	}
 
     {
       MMAL_PARAMETER_UINT32_T param = {{ MMAL_PARAMETER_INTRAPERIOD, sizeof(param)}, config->intraperiod};

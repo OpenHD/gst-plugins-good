@@ -104,6 +104,7 @@ typedef struct
    //Consti10
    int qp_min;
    int qp_max;
+   int rate_control;
    //Consti10
    int bInlineHeaders;                  /// Insert inline headers to stream (SPS, PPS)
    int demoMode;                       /// Run app in demo mode
