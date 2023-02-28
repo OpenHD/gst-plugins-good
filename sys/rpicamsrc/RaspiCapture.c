@@ -266,6 +266,8 @@ void raspicapture_default_config(RASPIVID_CONFIG *config)
    config->fps_d = VIDEO_FRAME_RATE_DEN;
    config->intraperiod = -1;    // Not set
    config->quantisationParameter = 0;
+   config->qp_min=0;
+   config->qp_max=0;
    config->demoMode = 0;
    config->demoInterval = 250; // ms
    config->immutableInput = 1;
@@ -1457,6 +1459,28 @@ static MMAL_STATUS_T create_encoder_component(RASPIVID_STATE *state)
          goto error;
       }
    }
+   // Consti10
+  if (config->encoding == MMAL_ENCODING_H264 && config->qp_min)
+  {
+	MMAL_PARAMETER_UINT32_T param2 = {{ MMAL_PARAMETER_VIDEO_ENCODE_MIN_QUANT, sizeof(param)}, config->qp_min};
+	status = mmal_port_parameter_set(encoder_output, &param2.hdr);
+	if (status != MMAL_SUCCESS)
+	{
+	  vcos_log_error("XUnable to set min QP");
+	  goto error;
+	}
+  }
+  if (config->encoding == MMAL_ENCODING_H264 && config->qp_max)
+  {
+	MMAL_PARAMETER_UINT32_T param3 = {{ MMAL_PARAMETER_VIDEO_ENCODE_MAX_QUANT, sizeof(param)}, config->qp_max};
+	status = mmal_port_parameter_set(encoder_output, &param3.hdr);
+	if (status != MMAL_SUCCESS)
+	{
+	  vcos_log_error("XUnable to set max QP");
+	  goto error;
+	}
+  }
+   // Consti10
 
    if (config->encoding == MMAL_ENCODING_H264)
    {

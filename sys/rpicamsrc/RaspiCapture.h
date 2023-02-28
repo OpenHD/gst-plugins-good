@@ -101,6 +101,10 @@ typedef struct
    int fps_d;                      /// Requested frame rate (fps) denominator
    int intraperiod;                    /// Intra-refresh period (key frame rate)
    int quantisationParameter;          /// Quantisation parameter - quality. Set bitrate 0 and set this for variable bitrate
+   //Consti10
+   int qp_min;
+   int qp_max;
+   //Consti10
    int bInlineHeaders;                  /// Insert inline headers to stream (SPS, PPS)
    int demoMode;                       /// Run app in demo mode
    int demoInterval;                   /// Interval between camera settings changes
