@@ -1027,11 +1027,11 @@ gst_rpi_cam_src_set_property (GObject * object, guint prop_id,
       break;
 	// Consti10
 	case PROP_QP_MIN:
-	  src->capture_config.qp_max = g_value_get_int (value);
+	  src->capture_config.qp_min = g_value_get_int (value);
 	  src->capture_config.change_flags |= PROP_CHANGE_ENCODING;
 	  break;
 	case PROP_QP_MAX:
-	  src->capture_config.qp_min = g_value_get_int (value);
+	  src->capture_config.qp_max = g_value_get_int (value);
 	  src->capture_config.change_flags |= PROP_CHANGE_ENCODING;
 	  break;
 	// Consti10
