@@ -1438,6 +1438,7 @@ static MMAL_STATUS_T create_encoder_component(RASPIVID_STATE *state)
 	 }else{
 	   vcos_log_error("Invalid rate control %d",config->rate_control);
 	 }
+	 // WARNING for debug
 	 GST_WARNING("Setting rate control %d",config->rate_control);
 
       MMAL_PARAMETER_VIDEO_RATECONTROL_T param = {{ MMAL_PARAMETER_RATECONTROL, sizeof(param)}, my_rate_control};
@@ -1497,6 +1498,7 @@ static MMAL_STATUS_T create_encoder_component(RASPIVID_STATE *state)
 	  vcos_log_error("XUnable to set min QP");
 	  goto error;
 	}
+	// WARNING for debug
 	GST_WARNING("Set qp_min:%d",config->qp_min);
   }
   if (config->encoding == MMAL_ENCODING_H264 && config->qp_max)
@@ -1508,6 +1510,7 @@ static MMAL_STATUS_T create_encoder_component(RASPIVID_STATE *state)
 	  vcos_log_error("XUnable to set max QP");
 	  goto error;
 	}
+	// WARNING for debug
 	GST_WARNING("Set qp_max:%d",config->qp_max);
   }
    // Consti10
@@ -1991,8 +1994,12 @@ raspi_capture_update_config (RASPIVID_STATE *state, RASPIVID_CONFIG *config, gbo
     MMAL_PORT_T *encoder_output = encoder->output[0];
 
     status = mmal_port_parameter_set_uint32(encoder_output, MMAL_PARAMETER_VIDEO_BIT_RATE, config->bitrate);
-    if (status != MMAL_SUCCESS)
-      vcos_log_warn("Unable to change bitrate dynamically");
+    if (status != MMAL_SUCCESS) {
+	  vcos_log_warn("Unable to change bitrate dynamically");
+	}else{
+	  // WARNING for debug
+	  GST_WARNING("Changed bitrate dynamically to %d",config->bitrate);
+	}
 
     {
       MMAL_PARAMETER_UINT32_T param = {{ MMAL_PARAMETER_INTRAPERIOD, sizeof(param)}, config->intraperiod};
