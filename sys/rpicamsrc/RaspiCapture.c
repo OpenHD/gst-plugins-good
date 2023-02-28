@@ -940,6 +940,9 @@ raspi_capture_fill_buffer(RASPIVID_STATE *state, GstBuffer **bufp,
   /* No timestamps if no clockm or invalid PTS */
   GstClockTime gst_pts = GST_CLOCK_TIME_NONE;
 
+  // Consti10: HDMI to CSI adapter - might fail after 500ms, which then breaks the pipeline - try X times
+  // to get a buffer, only then fail
+  int n_tries_left=2;
   do {
     buffer = mmal_queue_timedwait(state->encoded_buffer_q, 500);
     // Work around a bug where mmal_queue_timedwait() might return
@@ -949,6 +952,14 @@ raspi_capture_fill_buffer(RASPIVID_STATE *state, GstBuffer **bufp,
       GST_WARNING ("Retrying mmal_queue_timedwait() due to spurious failure.");
       continue;
     }
+	if(buffer == NULL){
+	  GST_WARNING ("Got no buffer after 500ms, tries left: %d",n_tries_left);
+	  n_tries_left--;
+	  if(n_tries_left<=0){
+		break;
+	  }
+	  continue;
+	}
   } while (0);
 
   if (G_UNLIKELY(buffer == NULL)) {
