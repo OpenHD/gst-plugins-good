@@ -52,7 +52,6 @@ jobs:
             sudo cp libgstqmlgl.so ../
             sudo cp libgstrpicamsrc.so ../ 
             sudo rm -Rf *
-            sudo mv ../libgstqmlgl.so .
             sudo mv ../libgstrpicamsrc.so .
             cd /opt/gst-plugins-good
             fpm -a armhf -s dir -t deb -n gst-openhd-plugins -v 2.3-evo-$(date '+%m%d%H%M') -C /tmp/gst-plugins-good -p gst-openhd-plugins-2.3-evo.deb
